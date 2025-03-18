@@ -20,7 +20,7 @@ std::string get_reverse_string(const std::string& dna) {
     return reversed_dna;
 }
 
-std::string get_dna_complemrnt(std::string dna) {
+std::string get_dna_complement(std::string dna) {
     std::string reversed_dna = get_reverse_string(dna); // Reverse the string
     for (char& base : reversed_dna) {
         if (base == 'A') base = 'T';
