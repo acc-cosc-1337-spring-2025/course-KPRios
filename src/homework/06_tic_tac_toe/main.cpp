@@ -1,43 +1,50 @@
-
-#include <iostream>
 #include "tic_tac_toe.h"
+#include <iostream>
 
-using namespace std;
+int main()
+{
+    std::string first_player;
+    char choice = 'Y';
 
-int main() {
-    TicTacToe game;
-    string first_player;
-    
-    cout << "Enter first player (X or O): ";
-    cin >> first_player;
-    
-    game.start_game(first_player);
-    
-    while (!game.game_over()) {
-        game.display_board();
+    while (toupper(choice) == 'Y')
+    {
+        TicTacToe game;
+        do {
+            std::cout << "Enter first player (X or O): ";
+            std::cin >> first_player;
+        } while (first_player != "X" && first_player != "O");
+
+        game.start_game(first_player);
+
         int position;
-        cout << "Player " << game.get_player() << ", enter a position (1-9): ";
-        cin >> position;
-        
-        try {
+        while (!game.game_over())
+        {
+            game.display_board();
+            std::cout << "Player " << game.get_player() << ", enter a position (1-9): ";
+            std::cin >> position;
+            while (position < 1 || position > 9)
+            {
+                std::cout << "Invalid input. Enter position (1-9): ";
+                std::cin >> position;
+            }
+
             game.mark_board(position);
-        } catch (const exception& e) {
-            cout << "Error: " << e.what() << endl;
-            continue;
         }
-    }
-    
-    game.display_board();
-    cout << "Game over! All spots are filled." << endl;
-    
-    char choice;
-    cout << "Do you want to play again? (y/n): ";
-    cin >> choice;
-    
-    if (choice == 'y' || choice == 'Y') {
-        main(); // Restart the game
-    } else {
-        cout << "Thanks for playing!" << endl;
+
+        game.display_board();
+        std::cout << "Game over!\n";
+        std::string winner = game.get_winner();
+        if (winner == "C")
+        {
+            std::cout << "It's a tie!\n";
+        }
+        else
+        {
+            std::cout << "Player " << winner << " wins!\n";
+        }
+
+        std::cout << "Play again? (Y/N): ";
+        std::cin >> choice;
     }
 
     return 0;
