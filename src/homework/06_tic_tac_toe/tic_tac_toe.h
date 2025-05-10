@@ -30,3 +30,7 @@ private:
 };
 
 #endif
+
+friend std::ostream& operator<<(std::ostream& out, const TicTacToe& game);
+friend std::istream& operator>>(std::istream& in, TicTacToe& game);
+

@@ -1,51 +1,36 @@
 #include "tic_tac_toe.h"
+#include "tic_tac_toe_manager.h"
 #include <iostream>
 
-int main()
-{
-    std::string first_player;
-    char choice = 'Y';
+int main() {
+    TicTacToeManager manager;
+    std::string player;
+    char play_again;
 
-    while (toupper(choice) == 'Y')
-    {
+    do {
+        std::cout << "Enter first player (X or O): ";
+        std::cin >> player;
+
         TicTacToe game;
-        do {
-            std::cout << "Enter first player (X or O): ";
-            std::cin >> first_player;
-        } while (first_player != "X" && first_player != "O");
+        game.start_game(player);
 
-        game.start_game(first_player);
-
-        int position;
-        while (!game.game_over())
-        {
-            game.display_board();
-            std::cout << "Player " << game.get_player() << ", enter a position (1-9): ";
-            std::cin >> position;
-            while (position < 1 || position > 9)
-            {
-                std::cout << "Invalid input. Enter position (1-9): ";
-                std::cin >> position;
-            }
-
-            game.mark_board(position);
+        while (!game.game_over()) {
+            std::cin >> game;  // overloaded >>
+            std::cout << game; // overloaded <<
         }
 
-        game.display_board();
-        std::cout << "Game over!\n";
-        std::string winner = game.get_winner();
-        if (winner == "C")
-        {
-            std::cout << "It's a tie!\n";
-        }
-        else
-        {
-            std::cout << "Player " << winner << " wins!\n";
-        }
+        std::cout << "Game over. Winner: " << game.get_winner() << "\n";
 
-        std::cout << "Play again? (Y/N): ";
-        std::cin >> choice;
-    }
+        manager.save_game(game);
+
+        int o, x, t;
+        manager.get_winner_total(o, x, t);
+        std::cout << "X wins: " << x << ", O wins: " << o << ", Ties: " << t << "\n";
+
+        std::cout << "Play again? (y/n): ";
+        std::cin >> play_again;
+
+    } while (play_again == 'y' || play_again == 'Y');
 
     return 0;
 }

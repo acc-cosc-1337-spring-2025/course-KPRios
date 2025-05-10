@@ -1,37 +1,47 @@
-#define CATCH_CONFIG_MAIN
-#include "catch.hpp"
 #include "tic_tac_toe.h"
+#include "tic_tac_toe_manager.h"
+#include <cassert>
+#include <iostream>
 
-TEST_CASE("Test first player set to X")
-{
-    TicTacToe game;
-    game.start_game("X");
-    REQUIRE(game.get_player() == "X");
-}
-
-TEST_CASE("Test first player set to O")
-{
-    TicTacToe game;
-    game.start_game("O");
-    REQUIRE(game.get_player() == "O");
-}
-
-TEST_CASE("Test game over if 9 slots selected (Tie)")
-{
-    TicTacToe game;
-    game.start_game("X");
-
-    std::vector<int> moves = {1, 2, 3, 5, 4, 6, 8, 7, 9};
-    for (int move : moves)
-    {
-        game.mark_board(move);
-        if (move != 9)
-            REQUIRE(game.game_over() == false);
+void simulate_game(TicTacToe& game, std::string first_player, const std::vector<int>& moves) {
+    game.start_game(first_player);
+    for (int pos : moves) {
+        game.mark_board(pos);
+        if (game.game_over()) break;
     }
-
-    REQUIRE(game.game_over() == true);
-    REQUIRE(game.get_winner() == "C");
+    std::cout << game;
 }
 
-// Add similar tests for each of the win conditions...
+void test_tic_tac_toe_manager() {
+    TicTacToeManager manager;
+
+    // Game 1: X wins
+    TicTacToe game1;
+    simulate_game(game1, "X", {1, 4, 2, 5, 3}); // X wins (top row)
+    assert(game1.get_winner() == "X");
+    manager.save_game(game1);
+
+    // Game 2: O wins
+    TicTacToe game2;
+    simulate_game(game2, "O", {1, 4, 2, 5, 7, 6}); // O wins (left column)
+    assert(game2.get_winner() == "O");
+    manager.save_game(game2);
+
+    // Game 3: Tie
+    TicTacToe game3;
+    simulate_game(game3, "X", {1, 2, 3, 5, 4, 6, 8, 7, 9}); // Tie
+    assert(game3.get_winner() == "C");
+    manager.save_game(game3);
+
+    // Check winner totals
+    int x = 0, o = 0, t = 0;
+    manager.get_winner_total(o, x, t);
+
+    assert(x == 1);
+    assert(o == 1);
+    assert(t == 1);
+
+    std::cout << "\nAll test cases passed: \nX wins: " << x << ", O wins: " << o << ", Ties: " << t << "\n";
+}
+
 

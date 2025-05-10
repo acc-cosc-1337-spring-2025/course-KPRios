@@ -103,3 +103,19 @@ void TicTacToe::set_winner()
 {
     winner = (player == "X") ? "O" : "X";
 }
+
+std::ostream& operator<<(std::ostream& out, const TicTacToe& game) {
+    for (std::size_t i = 0; i < game.pegs.size(); i++) {
+        out << game.pegs[i];
+        if ((i + 1) % 3 == 0) out << "\n"; // Assuming 3x3 board
+    }
+    return out;
+}
+
+std::istream& operator>>(std::istream& in, TicTacToe& game) {
+    int position;
+    std::cout << "Enter a position (1-9): ";
+    in >> position;
+    game.mark_board(position);
+    return in;
+}
